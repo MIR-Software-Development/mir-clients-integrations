@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QProcess>
+#include "CreatePatientSessionWindow.h"
 #include "CreatePatientWindow.h"
 
 
@@ -21,9 +23,12 @@ public:
 private:
     Ui::MainWindow *ui;
     CreatePatientWindow *patientWindow;
+    CreatePatientSessionWindow *patientSessionWindow;
     QTcpSocket *tcpSocketHL7;
 
     void updateUiForHL7Connection(bool isConnected);
+    QString readWspFile(QString fileName);
+    void startWXPProtocolWithArgument(QString argument = "/X");
 private slots:
     void connectToHL7();
     void browseWXPDirectory();
@@ -35,5 +40,11 @@ private slots:
     void hl7SocketDisconnected();
     void hl7SocketReadyRead();
     void hl7SocketErrorOccurred(QAbstractSocket::SocketError);
+    void processDoneForWXPProtocol(int statusCode, QProcess::ExitStatus status);
+    void readPatientSessionWithWXPProtocol();
+    void createPatientAndStartWXPProtocol();
+    void createWXPPatientSession();
+    void releasePatientSessionWindowMemory();
+
 };
 #endif // MAINWINDOW_H

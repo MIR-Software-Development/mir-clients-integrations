@@ -8,6 +8,7 @@ class WXP
 public:
     WXP();
     static QString createPatientMessage(Patient *patient);
+    static QString createReadSessionMessage(Patient *patient, QString sessionDate, QString sessionTime);
 };
 
 #endif // WXP_H

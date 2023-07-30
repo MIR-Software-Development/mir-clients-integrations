@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pbWXPBrowse, SIGNAL(clicked()), this, SLOT(browseWXPDirectory()));
     connect(ui->pbWXPBrowseMIRExe, SIGNAL(clicked()), this, SLOT(browseWXPBrowseMIRExe()));
     connect(ui->pbWXPCreatePatient, SIGNAL(clicked()), this, SLOT(createWXPPatient()));
+    connect(ui->pbWXPCreatePatientSession, SIGNAL(clicked()), this, SLOT(createWXPPatientSession()));
+    connect(ui->pbWXPSendPatient, SIGNAL(clicked()), this, SLOT(createPatientAndStartWXPProtocol()));
+    connect(ui->pbWXPReadPatientSession, SIGNAL(clicked()), this, SLOT(readPatientSessionWithWXPProtocol()));
 }
 
 void MainWindow::connectToHL7()
@@ -118,10 +121,133 @@ void MainWindow::createWXPPatient()
     patientWindow->open();
 }
 
+void MainWindow::createWXPPatientSession()
+{
+    patientSessionWindow = new CreatePatientSessionWindow(this);
+    connect(patientSessionWindow, SIGNAL(finished(int)), this, SLOT(releasePatientSessionWindowMemory()));
+    connect(patientSessionWindow, SIGNAL(patientCreated(QString)), ui->teWXPPatientSRVContent, SLOT(setText(QString)));
+
+    patientSessionWindow->open();
+}
+
+void MainWindow::createPatientAndStartWXPProtocol()
+{
+    this->startWXPProtocolWithArgument("/X");
+}
+
+void MainWindow::readPatientSessionWithWXPProtocol()
+{
+    this->startWXPProtocolWithArgument("/V");
+}
+
+void MainWindow::startWXPProtocolWithArgument(QString argument)
+{
+    if (ui->leWXPMIRAppPath->text().isEmpty() || ui->leWXPMIRExePath->text().isEmpty()) {
+        QMessageBox::critical(this, "Error", "The MIR directory and the executable MIR path must be filled.");
+        return;
+    }
+
+    if (ui->teWXPPatientSRVContent->toPlainText().isEmpty()) {
+        QMessageBox::critical(this, "Error", "The content of the Patient.SRV file cannot be empty.");
+        return;
+    }
+
+    QFile file(ui->leWXPMIRAppPath->text() + "/Patient.SRV");
+    if (file.open(QIODevice::ReadWrite)) {
+        QTextStream stream(&file);
+        stream << ui->teWXPPatientSRVContent->toPlainText() << Qt::endl;
+
+        file.close();
+
+        QProcess *process = new QProcess(this);
+        connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processDoneForWXPProtocol(int, QProcess::ExitStatus)));
+
+        process->start(ui->leWXPMIRExePath->text(), QStringList(argument));
+
+        return;
+    }
+
+    QMessageBox::critical(this, "Error", "Cannot create the file or start the executable file. Please make sure you have the permissions.");
+}
+
+void MainWindow::processDoneForWXPProtocol(int statusCode, QProcess::ExitStatus status)
+{
+    // Results.wsp
+    ui->teWXPResultsWspFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results.wsp"));
+
+    // Results2ndBest.wsp
+    ui->teWXPResults2ndBestFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results2ndBest.wsp"));
+
+    // Results3rdBest.wsp
+    ui->teWXPResults3rdBestFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results3rdBest.wsp"));
+
+    // ResultsPostBd.wsp
+    ui->teWXPResultsPostBdFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsPostBd.wsp"));
+
+    // ResultsOxi.wsp
+    ui->teWXPResultsOxiFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsOxi.wsp"));
+
+    // SpiroResults.wsp
+    ui->teWXPResultsSpiroResultsFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/SpiroResults.wsp"));
+
+    // Then, adds the PDF file if it exists.
+    if (QFile(ui->leWXPMIRAppPath->text() + "/SpiroResults.pdf").exists()) {
+        ui->leWXPResultsSpiroResultsPdf->setText(ui->leWXPMIRAppPath->text() + "/SpiroResults.pdf");
+    }
+
+    // Now it checks if the curves exists.
+    if (QFile(ui->leWXPMIRAppPath->text() + "/FVC.jpg").exists()) {
+        ui->leWXPCurvesFVC->setText(ui->leWXPMIRAppPath->text() + "/FVC.jpg");
+    }
+
+    if (QFile(ui->leWXPMIRAppPath->text() + "/VC.jpg").exists()) {
+        ui->leWXPCurvesVC->setText(ui->leWXPMIRAppPath->text() + "/VC.jpg");
+    }
+
+    if (QFile(ui->leWXPMIRAppPath->text() + "/FVC_POST.jpg").exists()) {
+        ui->leWXPCurvesFVCPOST->setText(ui->leWXPMIRAppPath->text() + "/FVC_POST.jpg");
+    }
+
+    if (QFile(ui->leWXPMIRAppPath->text() + "/MVV.jpg").exists()) {
+        ui->leWXPCurvesMVV->setText(ui->leWXPMIRAppPath->text() + "/MVV.jpg");
+    }
+
+    if (QFile(ui->leWXPMIRAppPath->text() + "/OXI.jpg").exists()) {
+        ui->leWXPCurvesOXI->setText(ui->leWXPMIRAppPath->text() + "/OXI.jpg");
+    }
+}
+
+QString MainWindow::readWspFile(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.exists()) {
+        return NULL;
+    }
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return NULL;
+    }
+
+    QTextStream in(&file);
+    QString fileContent = in.readAll();
+
+    file.close();
+
+    return fileContent;
+}
+
+
 void MainWindow::releasePatientWindowMemory()
 {
     delete patientWindow;
 }
+
+void MainWindow::releasePatientSessionWindowMemory()
+{
+    //delete patientSessionWindow;
+}
+
 
 MainWindow::~MainWindow()
 {

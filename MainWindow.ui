@@ -251,14 +251,14 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QPushButton" name="pushButton_6">
+               <widget class="QPushButton" name="pbWXPSendPatient">
                 <property name="text">
                  <string>Send a patient</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_5">
+               <widget class="QPushButton" name="pbWXPReadPatientSession">
                 <property name="text">
                  <string>Read a session</string>
                 </property>
@@ -281,7 +281,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_8">
+             <widget class="QPushButton" name="pbWXPCreatePatientSession">
               <property name="text">
                <string>Open a session</string>
               </property>
@@ -315,7 +315,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QTextEdit" name="textEdit_5"/>
+             <widget class="QTextEdit" name="teWXPResultsWspFile"/>
             </item>
            </layout>
           </widget>
@@ -325,7 +325,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
-             <widget class="QTextEdit" name="textEdit_6"/>
+             <widget class="QTextEdit" name="teWXPResults2ndBestFile"/>
             </item>
            </layout>
           </widget>
@@ -335,7 +335,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_10">
             <item>
-             <widget class="QTextEdit" name="textEdit_7"/>
+             <widget class="QTextEdit" name="teWXPResults3rdBestFile"/>
             </item>
            </layout>
           </widget>
@@ -345,7 +345,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_11">
             <item>
-             <widget class="QTextEdit" name="textEdit_8"/>
+             <widget class="QTextEdit" name="teWXPResultsPostBdFile"/>
             </item>
            </layout>
           </widget>
@@ -355,7 +355,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
-             <widget class="QTextEdit" name="textEdit_9"/>
+             <widget class="QTextEdit" name="teWXPResultsOxiFile"/>
             </item>
            </layout>
           </widget>
@@ -374,7 +374,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lineEdit"/>
+               <widget class="QLineEdit" name="leWXPResultsSpiroResultsPdf"/>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton">
@@ -386,7 +386,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QTextEdit" name="textEdit_10"/>
+             <widget class="QTextEdit" name="teWXPResultsSpiroResultsFile"/>
             </item>
            </layout>
           </widget>
@@ -418,10 +418,10 @@
                </widget>
               </item>
               <item row="0" column="5">
-               <widget class="QLineEdit" name="lineEdit_4"/>
+               <widget class="QLineEdit" name="leWXPCurvesFVCVT"/>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEdit_3"/>
+               <widget class="QLineEdit" name="leWXPCurvesFVC"/>
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_7">
@@ -459,16 +459,16 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLineEdit" name="lineEdit_5"/>
+               <widget class="QLineEdit" name="leWXPCurvesVC"/>
               </item>
               <item row="2" column="1">
-               <widget class="QLineEdit" name="lineEdit_6"/>
+               <widget class="QLineEdit" name="leWXPCurvesFVCPOST"/>
               </item>
               <item row="1" column="5">
-               <widget class="QLineEdit" name="lineEdit_7"/>
+               <widget class="QLineEdit" name="leWXPCurvesMVV"/>
               </item>
               <item row="2" column="5">
-               <widget class="QLineEdit" name="lineEdit_8"/>
+               <widget class="QLineEdit" name="leWXPCurvesOXI"/>
               </item>
               <item row="1" column="4">
                <widget class="QLabel" name="label_9">
