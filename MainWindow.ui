@@ -107,12 +107,26 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Message HL7 to send</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QTextEdit" name="textEdit"/>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_2">
               <property name="text">
                <string>Send &gt;&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Message received</string>
               </property>
              </widget>
             </item>
@@ -124,7 +138,14 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>&lt;b&gt;Quick operations&lt;/b&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pbHL7CreatePatient">
               <property name="text">
                <string>Create a new patient</string>
               </property>
@@ -162,22 +183,53 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="label_4">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leWXPMIRAppPath"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="leWXPMIRExePath"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pbWXPBrowseMIRExe">
             <property name="text">
-             <string>Path of MIR application</string>
+             <string>Browse</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLineEdit" name="leWXPMIRAppPath"/>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Directory of MIR application</string>
+            </property>
+           </widget>
           </item>
-          <item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Path of the MIR executable</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
            <widget class="QPushButton" name="pbWXPBrowse">
             <property name="text">
              <string>Browse</string>
             </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QComboBox" name="comboBox">
+            <item>
+             <property name="text">
+              <string>Windows</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>MacOS</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -187,14 +239,32 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Content of the Patient.SRV file</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QTextEdit" name="textEdit_3"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_6">
-              <property name="text">
-               <string>Send &gt;&gt;</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="pushButton_6">
+                <property name="text">
+                 <string>Send a patient</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_5">
+                <property name="text">
+                 <string>Read a session</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QTextEdit" name="textEdit_4"/>
@@ -204,7 +274,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="QPushButton" name="pushButton_7">
+             <widget class="QPushButton" name="pbWXPCreatePatient">
               <property name="text">
                <string>Create a new patient</string>
               </property>
@@ -213,7 +283,7 @@
             <item>
              <widget class="QPushButton" name="pushButton_8">
               <property name="text">
-               <string>Consult a session</string>
+               <string>Open a session</string>
               </property>
              </widget>
             </item>
@@ -237,7 +307,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>4</number>
+           <number>6</number>
           </property>
           <widget class="QWidget" name="tab_5">
            <attribute name="title">
@@ -251,7 +321,7 @@
           </widget>
           <widget class="QWidget" name="tab_6">
            <attribute name="title">
-            <string>Page</string>
+            <string>Results2ndBest.wsp</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
@@ -261,7 +331,7 @@
           </widget>
           <widget class="QWidget" name="tab_7">
            <attribute name="title">
-            <string>Page</string>
+            <string>Results3rdBest.wsp</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_10">
             <item>
@@ -271,11 +341,52 @@
           </widget>
           <widget class="QWidget" name="tab_5">
            <attribute name="title">
-            <string>Tab 2</string>
+            <string>ResultsPostBd.wsp</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_11">
             <item>
              <widget class="QTextEdit" name="textEdit_8"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_8">
+           <attribute name="title">
+            <string>ResultsOxi.wsp</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <widget class="QTextEdit" name="textEdit_9"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_9">
+           <attribute name="title">
+            <string>SpiroResults</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>PDF</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton">
+                <property name="text">
+                 <string>Open file</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="textEdit_10"/>
             </item>
            </layout>
           </widget>
@@ -315,7 +426,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_7">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>VC.jpg</string>
                 </property>
                </widget>
               </item>
@@ -336,14 +447,14 @@
               <item row="0" column="4">
                <widget class="QLabel" name="label_6">
                 <property name="text">
-                 <string>FVC_POST.jpg</string>
+                 <string>FVC_VT.jpg</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_8">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>FVC_POST.jpg</string>
                 </property>
                </widget>
               </item>
@@ -362,14 +473,14 @@
               <item row="1" column="4">
                <widget class="QLabel" name="label_9">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>MVV.jpg</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="4">
                <widget class="QLabel" name="label_10">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>OXI.jpg</string>
                 </property>
                </widget>
               </item>
@@ -437,7 +548,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

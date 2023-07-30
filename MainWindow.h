@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "CreatePatientWindow.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,9 +19,14 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    CreatePatientWindow *patientWindow;
 
 private slots:
     void connectToHL7();
-    void browserWXPDirectory();
+    void browseWXPDirectory();
+    void browseWXPBrowseMIRExe();
+    void createWXPPatient();
+    void createHL7Patient();
+    void releasePatientWindowMemory();
 };
 #endif // MAINWINDOW_H
