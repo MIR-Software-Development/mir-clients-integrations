@@ -26,6 +26,7 @@ signals:
     void patientCreated(QString);
 private:
     Ui::CreatePatientWindow *ui;
+    void showFormErrormMessage(QString field);
 };
 
 #endif // CREATEPATIENTWINDOW_H

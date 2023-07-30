@@ -30,6 +30,36 @@ CreatePatientWindow::CreatePatientWindow(QWidget *parent, QString protocol):
 
 void CreatePatientWindow::createPatient()
 {
+    if (ui->lePatientId->text().isEmpty()) {
+        this->showFormErrormMessage("ID");
+        return;
+    }
+
+    if (ui->lePatientFirstName->text().isEmpty()) {
+        this->showFormErrormMessage("First Name");
+        return;
+    }
+
+    if (ui->lePatientLastName->text().isEmpty()) {
+        this->showFormErrormMessage("Last Name");
+        return;
+    }
+
+    if (!ui->rbPatientIsFemale->isChecked() && !ui->rbPatientIsMale->isChecked()) {
+        this->showFormErrormMessage("Gender");
+        return;
+    }
+
+    if (ui->sbPatientHeight->text().isEmpty()) {
+        this->showFormErrormMessage("Height");
+        return;
+    }
+
+    if (ui->sbPatientWeight->text().isEmpty()) {
+        this->showFormErrormMessage("Weight");
+        return;
+    }
+
     Patient *patient = new Patient(
         ui->lePatientId->text(),
         ui->lePatientFirstName->text(),
@@ -53,6 +83,11 @@ void CreatePatientWindow::createPatient()
     emit patientCreated(message);
 
     this->close();
+}
+
+void CreatePatientWindow::showFormErrormMessage(QString field)
+{
+    QMessageBox::critical(this, "Error", "Please complete the field <b>"+ field + "</b>.");
 }
 
 
