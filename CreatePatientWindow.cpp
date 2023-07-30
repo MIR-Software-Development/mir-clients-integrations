@@ -9,15 +9,52 @@ CreatePatientWindow::CreatePatientWindow(QWidget *parent, QString protocol):
 {
     ui->setupUi(this);
 
+    this->currentProtocol = protocol;
+
+    QStringList ethnicGroups;
+
     if (protocol == "HL7") {
-        // Combobox to change.
+        ethnicGroups << "2054 B" << "2028 A" << "2106 W";
     }
     else if (protocol == "WXP") {
-        // Combobox to change.
+        ethnicGroups << "Caucasian" << "Oriental" << "Chinese" << "Japanese" << "Polynesian" << "North Indian" << "South Indian" << "Pakistan" << "African descent" << "Not defined";
     } else {
         QMessageBox::information(this, "Error", "This protocol does not exist.");
+        this->close();
     }
+
+    ui->cbEthnicGroups->insertItems(0, ethnicGroups);
+
+    connect(ui->pbCreatePatient, SIGNAL(clicked()), this, SLOT(createPatient()));
 }
+
+void CreatePatientWindow::createPatient()
+{
+    Patient *patient = new Patient(
+        ui->lePatientId->text(),
+        ui->lePatientFirstName->text(),
+        ui->lePatientLastName->text(),
+        ui->dePatientBirthDate->text(),
+        ui->rbPatientIsFemale->isChecked() ? 1 : 0,
+        ui->sbPatientHeight->value(),
+        ui->sbPatientWeight->value(),
+        ui->cbEthnicGroups->currentIndex(),
+        ui->tePatientNotes->toPlainText()
+    );
+
+    QString message = NULL;
+
+    if (this->currentProtocol == "HL7") {
+        message = HL7::createPatientMessage(patient);
+    } else {
+        message = WXP::createPatientMessage(patient);
+    }
+
+    emit patientCreated(message);
+
+    this->close();
+}
+
 
 CreatePatientWindow::~CreatePatientWindow()
 {

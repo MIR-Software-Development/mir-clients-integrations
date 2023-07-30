@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTcpSocket>
 #include "CreatePatientWindow.h"
 
 
@@ -20,7 +21,9 @@ public:
 private:
     Ui::MainWindow *ui;
     CreatePatientWindow *patientWindow;
+    QTcpSocket *tcpSocketHL7;
 
+    void updateUiForHL7Connection(bool isConnected);
 private slots:
     void connectToHL7();
     void browseWXPDirectory();
@@ -28,5 +31,9 @@ private slots:
     void createWXPPatient();
     void createHL7Patient();
     void releasePatientWindowMemory();
+    void hl7SocketConnected();
+    void hl7SocketDisconnected();
+    void hl7SocketReadyRead();
+    void hl7SocketErrorOccurred(QAbstractSocket::SocketError);
 };
 #endif // MAINWINDOW_H

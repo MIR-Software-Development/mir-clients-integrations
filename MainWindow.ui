@@ -48,7 +48,7 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QPushButton" name="btnHL7Connect">
+           <widget class="QPushButton" name="pbHL7Connect">
             <property name="text">
              <string>Connect</string>
             </property>
@@ -91,7 +91,7 @@
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="lHL7SocketStatus">
             <property name="text">
              <string>&lt;span style=&quot; font-weight:700; color:#ff0000;&quot;&gt;Server disconnected.&lt;/span&gt;</string>
             </property>
@@ -103,42 +103,42 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="hl7MessageSection">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QLabel" name="label_11">
+             <widget class="QLabel" name="lHL7MsgToSend">
               <property name="text">
                <string>Message HL7 to send</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="textEdit"/>
+             <widget class="QTextEdit" name="teHL7MsgToSend"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="pbHL7SendMessage">
               <property name="text">
                <string>Send &gt;&gt;</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_12">
+             <widget class="QLabel" name="lHL7MessageReceived">
               <property name="text">
                <string>Message received</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="textEdit_2"/>
+             <widget class="QTextEdit" name="teHL7MessageReceived"/>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="QLabel" name="label_13">
+             <widget class="QLabel" name="lHL7QuickOperations">
               <property name="text">
                <string>&lt;b&gt;Quick operations&lt;/b&gt;</string>
               </property>
@@ -152,7 +152,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="pbHL7ReadSession">
               <property name="text">
                <string>Consult a session</string>
               </property>
@@ -246,7 +246,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="textEdit_3"/>
+             <widget class="QTextEdit" name="teWXPPatientSRVContent"/>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
