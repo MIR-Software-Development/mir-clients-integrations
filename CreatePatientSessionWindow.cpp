@@ -14,6 +14,10 @@ CreatePatientSessionWindow::CreatePatientSessionWindow(QWidget *parent) :
     connect(ui->pbCreateSession, SIGNAL(clicked()), this, SLOT(createSession()));
 }
 
+///
+/// Create the WXP or HL7 message and emit a signal to complete the input in the parent window.
+/// \brief CreatePatientSessionWindow::createSession
+///
 void CreatePatientSessionWindow::createSession()
 {
     if (ui->lePatientId->text().isEmpty()) {
@@ -36,7 +40,7 @@ void CreatePatientSessionWindow::createSession()
         ui->lePatientFirstName->text(),
         ui->lePatientLastName->text(),
         ui->dePatientBirthDate->text()
-    );
+        );
 
     QString message = NULL;
 
@@ -49,12 +53,15 @@ void CreatePatientSessionWindow::createSession()
     this->close();
 }
 
+///
+/// Show a QMessageBox "error" to avoid duplicated code when a field is not filled.
+/// \brief CreatePatientSessionWindow::showFormErrormMessage
+/// \param field
+///
 void CreatePatientSessionWindow::showFormErrormMessage(QString field)
 {
     QMessageBox::critical(this, "Error", "Please complete the field <b>"+ field + "</b>.");
 }
-
-
 
 CreatePatientSessionWindow::~CreatePatientSessionWindow()
 {

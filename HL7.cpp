@@ -7,6 +7,12 @@ HL7::HL7()
 
 }
 
+///
+/// Create the HL7 string to create a patient and start some tests.
+/// \brief HL7::createPatientMessage
+/// \param patient
+/// \return
+///
 QString HL7::createPatientMessage(Patient *patient)
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();

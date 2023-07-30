@@ -8,6 +8,12 @@ WXP::WXP()
 
 }
 
+///
+/// Create the Patient.SRV content to create a patient and start some tests.
+/// \brief WXP::createPatientMessage
+/// \param patient
+/// \return
+///
 QString WXP::createPatientMessage(Patient *patient)
 {
     QString content = "[Identification]\r\n";
@@ -24,6 +30,14 @@ QString WXP::createPatientMessage(Patient *patient)
     return content;
 }
 
+///
+/// Create the Patient.SRV file to read the session of a patient.
+/// \brief WXP::createReadSessionMessage
+/// \param patient
+/// \param sessionDate
+/// \param sessionTime
+/// \return
+///
 QString WXP::createReadSessionMessage(Patient *patient, QString sessionDate, QString sessionTime)
 {
     QString content = "[Identification]\r\n";

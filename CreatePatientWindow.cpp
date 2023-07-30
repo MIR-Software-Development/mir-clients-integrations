@@ -3,6 +3,12 @@
 
 #include <QMessageBox>
 
+///
+/// Set the ethnic group combobox based on the current protocol.
+/// \brief CreatePatientWindow::CreatePatientWindow
+/// \param parent
+/// \param protocol
+///
 CreatePatientWindow::CreatePatientWindow(QWidget *parent, QString protocol):
     QDialog(parent),
     ui(new Ui::CreatePatientWindow)
@@ -28,6 +34,10 @@ CreatePatientWindow::CreatePatientWindow(QWidget *parent, QString protocol):
     connect(ui->pbCreatePatient, SIGNAL(clicked()), this, SLOT(createPatient()));
 }
 
+///
+/// Create the WXP or HL7 message and emit a signal to complete the input in the parent window.
+/// \brief CreatePatientWindow::createPatient
+///
 void CreatePatientWindow::createPatient()
 {
     if (ui->lePatientId->text().isEmpty()) {
@@ -70,7 +80,7 @@ void CreatePatientWindow::createPatient()
         ui->sbPatientWeight->value(),
         ui->cbEthnicGroups->currentIndex(),
         ui->tePatientNotes->toPlainText()
-    );
+        );
 
     QString message = NULL;
 
@@ -85,11 +95,15 @@ void CreatePatientWindow::createPatient()
     this->close();
 }
 
+///
+/// Show a QMessageBox "error" to avoid duplicated code when a field is not filled.
+/// \brief CreatePatientSessionWindow::showFormErrormMessage
+/// \param field
+///
 void CreatePatientWindow::showFormErrormMessage(QString field)
 {
     QMessageBox::critical(this, "Error", "Please complete the field <b>"+ field + "</b>.");
 }
-
 
 CreatePatientWindow::~CreatePatientWindow()
 {

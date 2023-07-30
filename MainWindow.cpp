@@ -3,6 +3,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+///
+/// Init socket and UI components.
+/// \brief MainWindow::MainWindow
+/// \param parent
+///
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -27,6 +32,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pbWXPReadPatientSession, SIGNAL(clicked()), this, SLOT(readPatientSessionWithWXPProtocol()));
 }
 
+///
+/// When user tries to establish a connection with MIR app through TCP Socket.
+/// \brief MainWindow::connectToHL7
+///
 void MainWindow::connectToHL7()
 {
     if (tcpSocketHL7 != NULL && tcpSocketHL7->isOpen()) {
@@ -44,11 +53,19 @@ void MainWindow::connectToHL7()
     tcpSocketHL7->connectToHost(ui->leHL7IpAddress->text(), ui->sbHL7Port->text().toInt());
 }
 
+///
+/// Event triggered when the TCP socket is connected.
+/// \brief MainWindow::hl7SocketConnected
+///
 void MainWindow::hl7SocketConnected()
 {
     qDebug() << "Connected";
 }
 
+///
+/// Event triggered when the TCP socket is disconnected.
+/// \brief MainWindow::hl7SocketDisconnected
+///
 void MainWindow::hl7SocketDisconnected()
 {
     qDebug() << "Disconnected";
@@ -57,13 +74,24 @@ void MainWindow::hl7SocketDisconnected()
     delete tcpSocketHL7;
 }
 
+///
+/// Event triggered when the TCP socket is ready to receive new messages.
+/// \brief MainWindow::hl7SocketReadyRead
+///
 void MainWindow::hl7SocketReadyRead()
 {
     qDebug() << "Ready...";
 
+    // TODO: Add messages received in the plain text field.
+
     this->updateUiForHL7Connection(true);
 }
 
+///
+/// Event triggered when the TCP socket has an error.
+/// \brief MainWindow::hl7SocketErrorOccurred
+/// \param error
+///
 void MainWindow::hl7SocketErrorOccurred(QAbstractSocket::SocketError error)
 {
     QMessageBox::critical(this, "Connection refused", "An error occurred during the connection:\n" + tcpSocketHL7->errorString());
@@ -71,6 +99,11 @@ void MainWindow::hl7SocketErrorOccurred(QAbstractSocket::SocketError error)
     delete tcpSocketHL7;
 }
 
+///
+/// Update the UI based on the HL7 connection status.
+/// \brief MainWindow::updateUiForHL7Connection
+/// \param isConnected
+///
 void MainWindow::updateUiForHL7Connection(bool isConnected = true)
 {
     QString status = "<span style='color: {color};font-weight: bold'>{status}</span>";
@@ -91,6 +124,10 @@ void MainWindow::updateUiForHL7Connection(bool isConnected = true)
     ui->teHL7MessageReceived->setVisible(isConnected);
 }
 
+///
+/// Open the window to create the patient HL7 string.
+/// \brief MainWindow::createHL7Patient
+///
 void MainWindow::createHL7Patient()
 {
     patientWindow = new CreatePatientWindow(this, "HL7");
@@ -99,6 +136,10 @@ void MainWindow::createHL7Patient()
     patientWindow->open();
 }
 
+///
+/// Open the OS prompt to select the Exchange directory.
+/// \brief MainWindow::browseWXPDirectory
+///
 void MainWindow::browseWXPDirectory()
 {
     QString directory = QFileDialog::getExistingDirectory(this, "Select MIR directory...", "C:/", QFileDialog::ShowDirsOnly);
@@ -106,6 +147,10 @@ void MainWindow::browseWXPDirectory()
     ui->leWXPMIRAppPath->setText(directory);
 }
 
+///
+/// Open the OS prompt to select the MIR executable path.
+/// \brief MainWindow::browseWXPBrowseMIRExe
+///
 void MainWindow::browseWXPBrowseMIRExe()
 {
     QString exeFile = QFileDialog::getOpenFileName(this, "Select MIR executable file...", "C:/MIR/", "*.exe");
@@ -113,6 +158,10 @@ void MainWindow::browseWXPBrowseMIRExe()
     ui->leWXPMIRExePath->setText(exeFile);
 }
 
+///
+/// Open the window to create the patient.SRV content file to create a patient and start tests.
+/// \brief MainWindow::createWXPPatient
+///
 void MainWindow::createWXPPatient()
 {
     patientWindow = new CreatePatientWindow(this, "WXP");
@@ -121,6 +170,10 @@ void MainWindow::createWXPPatient()
     patientWindow->open();
 }
 
+///
+/// Open the window to create the patient.SRV content file to consult a session.
+/// \brief MainWindow::createWXPPatientSession
+///
 void MainWindow::createWXPPatientSession()
 {
     patientSessionWindow = new CreatePatientSessionWindow(this);
@@ -130,16 +183,29 @@ void MainWindow::createWXPPatientSession()
     patientSessionWindow->open();
 }
 
+///
+/// Start the MIR app with /X argument.
+/// \brief MainWindow::createPatientAndStartWXPProtocol
+///
 void MainWindow::createPatientAndStartWXPProtocol()
 {
     this->startWXPProtocolWithArgument("/X");
 }
 
+///
+/// Start the MIR app with /V argument.
+/// \brief MainWindow::readPatientSessionWithWXPProtocol
+///
 void MainWindow::readPatientSessionWithWXPProtocol()
 {
     this->startWXPProtocolWithArgument("/V");
 }
 
+///
+/// Start the MIR app with the argument specified.
+/// \brief MainWindow::startWXPProtocolWithArgument
+/// \param argument
+///
 void MainWindow::startWXPProtocolWithArgument(QString argument)
 {
     if (ui->leWXPMIRAppPath->text().isEmpty() || ui->leWXPMIRExePath->text().isEmpty()) {
@@ -170,6 +236,12 @@ void MainWindow::startWXPProtocolWithArgument(QString argument)
     QMessageBox::critical(this, "Error", "Cannot create the file or start the executable file. Please make sure you have the permissions.");
 }
 
+///
+/// When MIR app is closed, it reads the Exchange protocol files generated to complete the fields.
+/// \brief MainWindow::processDoneForWXPProtocol
+/// \param statusCode
+/// \param status
+///
 void MainWindow::processDoneForWXPProtocol(int statusCode, QProcess::ExitStatus status)
 {
     // Results.wsp
@@ -217,6 +289,12 @@ void MainWindow::processDoneForWXPProtocol(int statusCode, QProcess::ExitStatus 
     }
 }
 
+///
+/// Read the .wsp files from MIR directory.
+/// \brief MainWindow::readWspFile
+/// \param fileName
+/// \return
+///
 QString MainWindow::readWspFile(QString fileName)
 {
     QFile file(fileName);
@@ -237,17 +315,23 @@ QString MainWindow::readWspFile(QString fileName)
     return fileContent;
 }
 
-
+///
+/// Delete the pointer to release memory.
+/// \brief MainWindow::releasePatientWindowMemory
+///
 void MainWindow::releasePatientWindowMemory()
 {
     delete patientWindow;
 }
 
+///
+/// Delete the pointer to release memory.
+/// \brief MainWindow::releasePatientSessionWindowMemory
+///
 void MainWindow::releasePatientSessionWindowMemory()
 {
     //delete patientSessionWindow;
 }
-
 
 MainWindow::~MainWindow()
 {
