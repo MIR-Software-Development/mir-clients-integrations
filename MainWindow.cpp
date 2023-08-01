@@ -176,7 +176,7 @@ void MainWindow::updateWXPOperatingSystem(int index)
 
     ui->lWXPMIRDirectoryPath->setText("Directory of Exchange files");
     ui->cbWXPMIRExecutable->clear();
-    ui->cbWXPMIRExecutable->addItems(QStringList("MIR Spiro"));
+    ui->cbWXPMIRExecutable->addItems(QStringList("/Applications/MIR Spiro.app"));
 
     qDebug() << "MacOS";
 }
@@ -231,6 +231,11 @@ void MainWindow::readPatientSessionWithWXPProtocol()
 ///
 void MainWindow::startWXPProtocolWithArgument(QString argument)
 {
+    // If the operating system is MacOS.
+    if (ui->cbWXPSelectOS->currentIndex() == 1) {
+        argument = argument.replace("/", "-");
+    }
+
     if (ui->leWXPMIRAppPath->text().isEmpty()) {
         QMessageBox::critical(this, "Error", "The MIR directory and the executable MIR path must be filled.");
         return;
@@ -251,6 +256,8 @@ void MainWindow::startWXPProtocolWithArgument(QString argument)
         QProcess *process = new QProcess(this);
         connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processDoneForWXPProtocol(int, QProcess::ExitStatus)));
 
+        qDebug() << ui->cbWXPMIRExecutable->currentText();
+        qDebug() << argument;
         process->start(ui->cbWXPMIRExecutable->currentText(), QStringList(argument));
 
         return;
