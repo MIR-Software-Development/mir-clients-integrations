@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 ///
 /// Init socket and UI components.
@@ -18,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Init UI.
     this->updateUiForHL7Connection(false);
+    this->updateWXPOperatingSystem(0);
 
     // HL7.
     connect(ui->pbHL7Connect, SIGNAL(clicked()), this, SLOT(connectToHL7()));
@@ -25,11 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Exchange.
     connect(ui->pbWXPBrowse, SIGNAL(clicked()), this, SLOT(browseWXPDirectory()));
-    connect(ui->pbWXPBrowseMIRExe, SIGNAL(clicked()), this, SLOT(browseWXPBrowseMIRExe()));
+    connect(ui->cbWXPSelectOS, SIGNAL(currentIndexChanged(int)), this, SLOT(updateWXPOperatingSystem(int)));
     connect(ui->pbWXPCreatePatient, SIGNAL(clicked()), this, SLOT(createWXPPatient()));
     connect(ui->pbWXPCreatePatientSession, SIGNAL(clicked()), this, SLOT(createWXPPatientSession()));
     connect(ui->pbWXPSendPatient, SIGNAL(clicked()), this, SLOT(createPatientAndStartWXPProtocol()));
     connect(ui->pbWXPReadPatientSession, SIGNAL(clicked()), this, SLOT(readPatientSessionWithWXPProtocol()));
+
+    connect(ui->pbWXPCurvesFVC, SIGNAL(clicked()), this, SLOT(openWXPFVCCurve()));
+    connect(ui->pbWXPCurvesVC, SIGNAL(clicked()), this, SLOT(openWXPVCCurve()));
+    connect(ui->pbWXPCurvesFVCVT, SIGNAL(clicked()), this, SLOT(openWXPFVCVtCurve()));
+    connect(ui->pbWXPCurvesFVCPOST, SIGNAL(clicked()), this, SLOT(openWXPFVCPostCurve()));
+    connect(ui->pbWXPCurvesMVV, SIGNAL(clicked()), this, SLOT(openWXPMVVCurve()));
+    connect(ui->pbWXPCurvesOXI, SIGNAL(clicked()), this, SLOT(openWXPOXICurve()));
 }
 
 ///
@@ -60,6 +69,8 @@ void MainWindow::connectToHL7()
 void MainWindow::hl7SocketConnected()
 {
     qDebug() << "Connected";
+
+    this->updateUiForHL7Connection(true);
 }
 
 ///
@@ -83,8 +94,6 @@ void MainWindow::hl7SocketReadyRead()
     qDebug() << "Ready...";
 
     // TODO: Add messages received in the plain text field.
-
-    this->updateUiForHL7Connection(true);
 }
 
 ///
@@ -147,15 +156,29 @@ void MainWindow::browseWXPDirectory()
     ui->leWXPMIRAppPath->setText(directory);
 }
 
-///
-/// Open the OS prompt to select the MIR executable path.
-/// \brief MainWindow::browseWXPBrowseMIRExe
-///
-void MainWindow::browseWXPBrowseMIRExe()
+void MainWindow::updateWXPOperatingSystem(int index)
 {
-    QString exeFile = QFileDialog::getOpenFileName(this, "Select MIR executable file...", "C:/MIR/", "*.exe");
+    if (index == 0) {
+        qDebug() << "Windows";
 
-    ui->leWXPMIRExePath->setText(exeFile);
+        QStringList operatingSystems;
+        operatingSystems << "C:/MIR/WinspiroPRO/winspiroPRO.exe" <<
+            "C:/MIR/spiroCONNECT/spiroCONNECT.exe" <<
+            "C:/MIR/MIR Spiro/MIR Spiro.exe";
+
+        ui->lWXPMIRDirectoryPath->setText("Directory of MIR application");
+        ui->cbWXPMIRExecutable->clear();
+        ui->cbWXPMIRExecutable->addItems(operatingSystems);
+
+        return;
+    }
+
+
+    ui->lWXPMIRDirectoryPath->setText("Directory of Exchange files");
+    ui->cbWXPMIRExecutable->clear();
+    ui->cbWXPMIRExecutable->addItems(QStringList("MIR Spiro"));
+
+    qDebug() << "MacOS";
 }
 
 ///
@@ -208,7 +231,7 @@ void MainWindow::readPatientSessionWithWXPProtocol()
 ///
 void MainWindow::startWXPProtocolWithArgument(QString argument)
 {
-    if (ui->leWXPMIRAppPath->text().isEmpty() || ui->leWXPMIRExePath->text().isEmpty()) {
+    if (ui->leWXPMIRAppPath->text().isEmpty()) {
         QMessageBox::critical(this, "Error", "The MIR directory and the executable MIR path must be filled.");
         return;
     }
@@ -228,7 +251,7 @@ void MainWindow::startWXPProtocolWithArgument(QString argument)
         QProcess *process = new QProcess(this);
         connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processDoneForWXPProtocol(int, QProcess::ExitStatus)));
 
-        process->start(ui->leWXPMIRExePath->text(), QStringList(argument));
+        process->start(ui->cbWXPMIRExecutable->currentText(), QStringList(argument));
 
         return;
     }
@@ -244,23 +267,30 @@ void MainWindow::startWXPProtocolWithArgument(QString argument)
 ///
 void MainWindow::processDoneForWXPProtocol(int statusCode, QProcess::ExitStatus status)
 {
+    QString content = NULL;
     // Results.wsp
-    ui->teWXPResultsWspFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results.wsp"));
+    ui->teWXPResultsWspFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results.wsp"));
+    ui->lWXPResultsWspFile->setText(this->setResultsWspFileStatus(content));
 
     // Results2ndBest.wsp
-    ui->teWXPResults2ndBestFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results2ndBest.wsp"));
+    ui->teWXPResults2ndBestFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results2ndBest.wsp"));
+    ui->lWXPResults2ndBestFile->setText(this->setResultsWspFileStatus(content));
 
     // Results3rdBest.wsp
-    ui->teWXPResults3rdBestFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results3rdBest.wsp"));
+    ui->teWXPResults3rdBestFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/Results3rdBest.wsp"));
+    ui->lWXPResults3rdBestFile->setText(this->setResultsWspFileStatus(content));
 
     // ResultsPostBd.wsp
-    ui->teWXPResultsPostBdFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsPostBd.wsp"));
+    ui->teWXPResultsPostBdFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsPostBd.wsp"));
+    ui->lWXPResultsPostBdFile->setText(this->setResultsWspFileStatus(content));
 
     // ResultsOxi.wsp
-    ui->teWXPResultsOxiFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsOxi.wsp"));
+    ui->teWXPResultsOxiFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/ResultsOxi.wsp"));
+    ui->lWXPResultsOxiFile->setText(this->setResultsWspFileStatus(content));
 
     // SpiroResults.wsp
-    ui->teWXPResultsSpiroResultsFile->setText(this->readWspFile(ui->leWXPMIRAppPath->text() + "/SpiroResults.wsp"));
+    ui->teWXPResultsSpiroResultsFile->setText(content = this->readWspFile(ui->leWXPMIRAppPath->text() + "/SpiroResults.wsp"));
+    ui->lWXPResultsSpiroResultsFile->setText(this->setResultsWspFileStatus(content));
 
     // Then, adds the PDF file if it exists.
     if (QFile(ui->leWXPMIRAppPath->text() + "/SpiroResults.pdf").exists()) {
@@ -313,6 +343,75 @@ QString MainWindow::readWspFile(QString fileName)
     file.close();
 
     return fileContent;
+}
+
+///
+/// Check if the file contains \r\n and \t chars.
+/// \brief MainWindow::setResultsWspFileStatus
+/// \param fileContent
+/// \return
+///
+QString MainWindow::setResultsWspFileStatus(QString fileContent)
+{
+    if (!fileContent.contains("\n") || !fileContent.contains("\t")) {
+        return "<span style=\"color: red; font-weight: bold;\">This file is not valid!</span>";
+    }
+
+    return "<span style=\"color: green; font-weight: bold;\">This file is valid</span>";
+}
+
+///
+/// Open the FVC.jpg file.
+/// \brief MainWindow::openWXPFVCCurve
+///
+void MainWindow::openWXPFVCCurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesFVC->text()));
+}
+
+///
+/// Open the VC.jpg file.
+/// \brief MainWindow::openWXPVCCurve
+///
+void MainWindow::openWXPVCCurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesVC->text()));
+}
+
+///
+/// Open the FVC_VT.jpg file.
+/// \brief MainWindow::openWXPFVCVtCurve
+///
+void MainWindow::openWXPFVCVtCurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesFVCVT->text()));
+}
+
+///
+/// Open the FVC_POST.jpg file.
+/// \brief MainWindow::openWXPFVCPostCurve
+///
+void MainWindow::openWXPFVCPostCurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesFVCPOST->text()));
+}
+
+///
+/// Open the MVV.jpg file.
+/// \brief MainWindow::openWXPMVVCurve
+///
+void MainWindow::openWXPMVVCurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesMVV->text()));
+}
+
+///
+/// Open the OXI.jpg file.
+/// \brief MainWindow::openWXPOXICurve
+///
+void MainWindow::openWXPOXICurve()
+{
+    QDesktopServices::openUrl(QUrl(ui->leWXPCurvesOXI->text()));
 }
 
 ///

@@ -78,7 +78,7 @@ void CreatePatientWindow::createPatient()
         ui->rbPatientIsFemale->isChecked() ? 1 : 0,
         ui->sbPatientHeight->value(),
         ui->sbPatientWeight->value(),
-        ui->cbEthnicGroups->currentIndex(),
+        ui->cbEthnicGroups->currentIndex() + 1,
         ui->tePatientNotes->toPlainText()
         );
 

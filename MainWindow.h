@@ -29,10 +29,10 @@ private:
     void updateUiForHL7Connection(bool isConnected);
     QString readWspFile(QString fileName);
     void startWXPProtocolWithArgument(QString argument = "/X");
+    QString setResultsWspFileStatus(QString fileContent);
 private slots:
     void connectToHL7();
     void browseWXPDirectory();
-    void browseWXPBrowseMIRExe();
     void createWXPPatient();
     void createHL7Patient();
     void releasePatientWindowMemory();
@@ -46,5 +46,12 @@ private slots:
     void createWXPPatientSession();
     void releasePatientSessionWindowMemory();
 
+    void updateWXPOperatingSystem(int index);
+    void openWXPFVCCurve();
+    void openWXPVCCurve();
+    void openWXPFVCVtCurve();
+    void openWXPFVCPostCurve();
+    void openWXPMVVCurve();
+    void openWXPOXICurve();
 };
 #endif // MAINWINDOW_H

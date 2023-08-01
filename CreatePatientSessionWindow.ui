@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Create a session</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -65,6 +65,9 @@
      </item>
      <item row="4" column="1">
       <widget class="QDateEdit" name="deSessionDateAndTime">
+       <property name="currentSection">
+        <enum>QDateTimeEdit::DaySection</enum>
+       </property>
        <property name="displayFormat">
         <string>dd/MM/yyyy HH:mm:ss</string>
        </property>
